@@ -1,11 +1,13 @@
 import React from 'react';
 import './App.css';
-import Posts from './components/Posts'
+import Navbar from './components/Navbar'
+import Main from './components/Main'
 
 function App() {
   return (
     <div>
-      <Posts />
+      <Navbar />
+      <Main />
     </div>
   );
 }
