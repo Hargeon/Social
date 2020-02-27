@@ -2,7 +2,7 @@ module Api
   module V1
     class PostsController < ApplicationController
       def index
-        posts = Post.all
+        posts = Post.order(created_at: :desc)
         render json: posts, status: 200
       end
 
@@ -11,19 +11,26 @@ module Api
         if post.save
           render json: post, status: 200
         else
-          render json: { 'message': 'invalid' }, status: 403
+          render json: post.errors, status: 403
         end
       end
 
-      def update; end
+      def update
+        post = Post.find_by(id: params[:id])
+        if post.update(post_params)
+          render json: post, status: 200
+        else
+          render json: post.errors, status: 403
+        end
+      end
 
       def destroy
-        post = Post.where(params[:id]).first
+        post = Post.find_by(id: params[:id])
         if post
           post.destroy!
           render json: { 'message': 'success' }, status: 200
         else
-          render json: { 'message': 'dont find' }, status: 404
+          render json: { 'message': 'error' }, status: 404
         end
       end
 

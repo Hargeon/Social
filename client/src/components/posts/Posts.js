@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import Post from './Post'
 import AddPost from './AddPost'
 
@@ -14,18 +15,20 @@ class Posts extends React.Component {
   }
 
   componentDidMount() {
-    fetch('http://localhost:3000/api/v1/posts')
-      .then(response => response.json())
-      .then(data => {
+    axios.get('http://localhost:3000/api/v1/posts')
+      .then(response => {
         this.setState({
-          posts: data.map(element => {
-            return ({
-              id: element.id,
-              description: element.description,
-            })
+          posts: response.data.map(data => {
+            return (
+              {
+                id: data.id,
+                description: data.description
+              }
+            )
           })
         })
       })
+      .catch(error => alert('Smth was wrong'))
   }
 
   addNewList(description) {
@@ -35,30 +38,36 @@ class Posts extends React.Component {
       }
     }
 
-    fetch(
-      'http://localhost:3000/api/v1/posts',
-      {
-        method: 'POST',
-        headers: {
-          'Content-type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      }
-    ).then(response => response.json())
-     .then(dataResponse => {
-      this.setState(prev => {
-        prev.posts.push(dataResponse)
-        return (
-          {
-            posts: prev.posts
-          }
-        )
+    axios.post('http://localhost:3000/api/v1/posts', data)
+      .then(response => {
+        this.setState(prev => {
+          prev.posts.unshift(response.data)
+          return(
+            {
+              posts: prev.posts
+            }
+          )
+        })
       })
-     })
+      .catch(error => alert('Smth was wrong'))
   }
 
   deletePost(id) {
+    axios.delete(`http://localhost:3000/api/v1/posts/${id}`)
+      .then(response => {
+        this.setState(prev => {
+          let newPosts = prev.posts.filter(function(value, index, arr) {
+            return value.id !== id
+          })
 
+          return(
+            {
+              posts: newPosts
+            }
+          )
+        })
+      })
+      .catch(error => alert('Smth was wrong'))
   }
 
   render() {

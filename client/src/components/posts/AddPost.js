@@ -24,7 +24,7 @@ class AddPost extends React.Component {
       <div>
         <form onSubmit={this.handleSubmit}>
           <input className='description' type='text' onChange={this.handleChange} placeholder='Description' />
-          <input type='submit' />
+          <input type='submit' value='Add'/>
         </form>
       </div>
     )
