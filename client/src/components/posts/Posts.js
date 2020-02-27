@@ -8,6 +8,9 @@ class Posts extends React.Component {
     this.state = {
       posts: []
     }
+
+    this.addNewList = this.addNewList.bind(this)
+    this.deletePost = this.deletePost.bind(this)
   }
 
   componentDidMount() {
@@ -26,7 +29,7 @@ class Posts extends React.Component {
   }
 
   addNewList(description) {
-    data = {
+    const data = {
       post: {
         description: description
       }
@@ -44,20 +47,24 @@ class Posts extends React.Component {
     ).then(response => response.json())
      .then(dataResponse => {
       this.setState(prev => {
-        prev.push(dataResponse)
+        prev.posts.push(dataResponse)
         return (
           {
-            posts: prev
+            posts: prev.posts
           }
         )
       })
      })
   }
 
+  deletePost(id) {
+
+  }
+
   render() {
     const posts = this.state.posts.map(post => {
       return (
-        <Post key={post.id} description={post.description} id={post.id} />
+        <Post key={post.id} description={post.description} id={post.id} onDeletePost={this.deletePost}/>
       )
     })
 

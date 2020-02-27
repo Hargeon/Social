@@ -17,7 +17,15 @@ module Api
 
       def update; end
 
-      def destroy; end
+      def destroy
+        post = Post.where(params[:id]).first
+        if post
+          post.destroy!
+          render json: { 'message': 'success' }, status: 200
+        else
+          render json: { 'message': 'dont find' }, status: 404
+        end
+      end
 
       private
 
